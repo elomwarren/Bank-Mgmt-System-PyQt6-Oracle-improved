@@ -1,0 +1,20 @@
+# ignore license file
+license.txt
+
+# ignore __pycache__ folder
+__pycache__/
+
+# ignore db 
+*.db
+
+# ignore json file
+*.json
+
+# folders
+build/
+
+# ignore spec file
+*.spec
+
+# some dir in dist/
+dist/

@@ -1,0 +1,6 @@
+PyQt6
+pyqtdarktheme
+cx_Oracle
+pandas
+openpyxl
+pyinstaller
