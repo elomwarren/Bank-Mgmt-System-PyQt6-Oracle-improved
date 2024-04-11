@@ -19,6 +19,8 @@ default tablespace users
 -- STORAGE
 storage (maxsize unlimited);
 -- THEN move to the pluggable and grant privileges to the admin user
+alter pluggable database WELBANK open;
+alter session set container = WELBANK;
 grant all privileges to welbank;
 
 -- The tables will be created for user <welbank>
