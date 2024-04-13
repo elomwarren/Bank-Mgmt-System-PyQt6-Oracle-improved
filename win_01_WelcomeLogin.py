@@ -72,6 +72,7 @@ class welcome(QMainWindow):
         ######################### CREATE WIDGETS #########################
         # self.welcomeLabel = QLabel("Welcome to WEL Bank")
         # self.welcomeLabel.setFont(QFont("Century", 28))
+        # Adding a logo
         self.logo = QPixmap(
             resource_path("./assets/WEL_Bank-logos_transparent_greentext_300x300.png")
         )
@@ -79,7 +80,10 @@ class welcome(QMainWindow):
         self.logolabel.setPixmap(self.logo)
         self.logolabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Consider adding a logo
+        # Server IP Address
+        self.ipaddressLabel = QLabel("IP Address")
+        self.ipaddressField = QLineEdit()
+        self.ipaddressField.setPlaceholderText("Server IP Address")
 
         # Username
         self.usernameLabel = QLabel("Username")
@@ -130,6 +134,8 @@ class welcome(QMainWindow):
         # layout.addWidget(self.welcomeLabel)
         layout.addWidget(self.logolabel)
         layout.addSpacing(10)
+        layout.addWidget(self.ipaddressLabel)
+        layout.addWidget(self.ipaddressField)
         layout.addWidget(self.usernameLabel)
         layout.addWidget(self.usernameField)
         layout.addWidget(self.passwordLabel)
@@ -172,7 +178,11 @@ class welcome(QMainWindow):
         # Grab text in the fields
         self.username = self.usernameField.text()
         self.password = self.passwordField.text()
-        self.dsn = "192.168.124.110:1521/WELBANK"
+        # self.dsn = "192.168.124.110:1521/WELBANK"
+        self.ip = self.ipaddressField.text()
+        self.port = 1521
+        self.service_name = 'welbank'
+        self.dsn = cx_Oracle.makedsn(self.ip, self.port, service_name=self.service_name)
 
         # set the appropriate dashboard and second department name
         if dashboard == "cusServDashboard":
@@ -217,7 +227,7 @@ class welcome(QMainWindow):
     # About button
     def about(self):
         QMessageBox.information(
-            self, "About", "Version 1.0" + "\n" + "This is the About section"
+            self, "About", "Version 2.0" + "\n" + "This is the About section"
         )
 
     # Help button
