@@ -1,4 +1,4 @@
--- Assuming Oracle Database is installed on the machine
+
 -- First, in Oracle database, CREATE a pluggable database named <WELBANK>
 
 -- using DBCA (Database Configuration Assistant) THEN
@@ -111,7 +111,8 @@ CREATE TABLE employees (
     hire_date   DATE NOT NULL,
     job_id      NUMBER NOT NULL,
     dep_id      NUMBER NOT NULL,
-    brch_id     NUMBER NOT NULL
+    brch_id     NUMBER NOT NULL,
+    username    VARCHAR2(100) NOT NULL
 );
 
 ALTER TABLE employees ADD CONSTRAINT employees_pk PRIMARY KEY ( emp_id );

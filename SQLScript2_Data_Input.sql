@@ -94,6 +94,15 @@ select * from dual;
 
 -- 6. EMPLOYEES TABLE DATA --
 
+-- PL/SQL trigger to populate <username> column in <employees> before data insertion
+CREATE OR REPLACE TRIGGER add_username_trigger
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    :NEW.username := LOWER(:NEW.emp_fn) || LOWER(:NEW.emp_ln);
+END;
+/
+
 -- MODIFYING NLS_DATE_FORMAT TO ACCEPT THE DATE FORMAT USED IN THE INSERT STATEMENTS BELOW
 -- ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD';
 

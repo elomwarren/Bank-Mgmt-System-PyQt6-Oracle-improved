@@ -172,7 +172,7 @@ class welcome(QMainWindow):
         # Grab text in the fields
         self.username = self.usernameField.text()
         self.password = self.passwordField.text()
-        self.dsn = "localhost:1521/WELBANK"
+        self.dsn = "192.168.124.110:1521/WELBANK"
 
         # set the appropriate dashboard and second department name
         if dashboard == "cusServDashboard":
