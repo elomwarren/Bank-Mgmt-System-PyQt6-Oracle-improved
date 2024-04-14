@@ -33,7 +33,7 @@ create user hr identified by 12345;
 -- HUMAN RESOURCES ROLE
 create role HUMAN_RESOURCES;
 -- GRANT NECESSARY RIVILEGES
-grant create session to HUMAN_RESOURCES
+grant create session to HUMAN_RESOURCES;
 -- 
 grant select, insert, update on welbank.EMPLOYEES to HUMAN_RESOURCES;
 grant select, insert, update on welbank.JOBS to HUMAN_RESOURCES;
