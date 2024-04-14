@@ -240,6 +240,11 @@ class welcome(QMainWindow):
 
     ##################### END OF BUTTON FUNCTIONS #####################
 
+    #_________________________ 
+    # Method to return ip address
+    def get_ip(self):
+        return self.ip
+
     ##################### CENTER WINDOW FUNCTION #####################
     def showEvent(self, event):
         self.center()
