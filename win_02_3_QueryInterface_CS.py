@@ -378,16 +378,23 @@ class queryInterface(QMainWindow):
         Returns:
             None.
         """
-        if dep == "CS":
-            self.usn = "cs"
-        elif dep == "HR":
-            self.usn = "hr"
+        # if dep == "CS":
+        #     self.usn = "cs"
+        # elif dep == "HR":
+        #     self.usn = "hr"
 
+        # import the welcome window
+        from win_01_WelcomeLogin import username, password, dsn
         # initialize the connection variable
+        # Access username, password and dsn from win_01_WelcomeLogin.py
+        self.username = username
+        self.password = password
+        self.dsn = dsn
+
         connection = None
         try:
             connection = cx_Oracle.connect(
-                user=self.usn, password="12345", dsn="localhost:1521/WELBANK"
+                user=self.username, password=self.password, dsn=self.dsn
             )
 
         except cx_Oracle.Error as err:

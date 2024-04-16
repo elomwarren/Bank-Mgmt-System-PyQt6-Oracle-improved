@@ -177,11 +177,11 @@ class welcome(QMainWindow):
     def login(self, dashboard: str, dep_usn: list):
         # Grab text in the fields
         self.username = self.usernameField.text()
-        self.password = self.passwordField.text()
+        self.password = self.passwordField.text()  # should probably be encrypted
         # self.dsn = "192.168.124.110:1521/WELBANK"
         self.ip = self.ipaddressField.text()
         self.port = 1521
-        self.service_name = 'welbank'
+        self.service_name = "welbank"
         self.dsn = cx_Oracle.makedsn(self.ip, self.port, service_name=self.service_name)
 
         # set the appropriate dashboard and second department name
@@ -239,11 +239,6 @@ class welcome(QMainWindow):
         )
 
     ##################### END OF BUTTON FUNCTIONS #####################
-
-    #_________________________ 
-    # Method to return ip address
-    def get_ip(self):
-        return self.ip
 
     ##################### CENTER WINDOW FUNCTION #####################
     def showEvent(self, event):
