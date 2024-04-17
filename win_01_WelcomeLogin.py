@@ -21,6 +21,8 @@ import cx_Oracle
 import qdarktheme
 import sys
 import os
+import configparser
+
 
 # https://stackoverflow.com/a/31966932
 def resource_path(relative_path):
@@ -62,10 +64,10 @@ class welcome(QMainWindow):
         self.hrDashboard = None
 
         # create the user interface
-        self.initUI()
+        # self.initUI()
 
-    # user interface function
-    def initUI(self):
+        # user interface function
+        # def initUI(self):
         """
         Initializes the customers window.
         """
@@ -73,55 +75,50 @@ class welcome(QMainWindow):
         # self.welcomeLabel = QLabel("Welcome to WEL Bank")
         # self.welcomeLabel.setFont(QFont("Century", 28))
         # Adding a logo
-        self.logo = QPixmap(
+        logo = QPixmap(
             resource_path("./assets/WEL_Bank-logos_transparent_greentext_300x300.png")
         )
-        self.logolabel = QLabel()
-        self.logolabel.setPixmap(self.logo)
-        self.logolabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Server IP Address
-        self.ipaddressLabel = QLabel("IP Address")
-        self.ipaddressField = QLineEdit()
-        self.ipaddressField.setPlaceholderText("Server IP Address")
+        logolabel = QLabel()
+        logolabel.setPixmap(logo)
+        logolabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Username
-        self.usernameLabel = QLabel("Username")
+        usernameLabel = QLabel("Username")
         self.usernameField = QLineEdit()
         self.usernameField.setPlaceholderText("Username")
 
         # Password
-        self.passwordLabel = QLabel("Password")
+        passwordLabel = QLabel("Password")
         self.passwordField = QLineEdit()
         self.passwordField.setPlaceholderText("Enter your password")
         self.passwordField.setEchoMode(QLineEdit.EchoMode.Password)
 
         # Login as
-        self.loginasLabel = QLabel("Login as")
-        self.loginasLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        loginasLabel = QLabel("Login as")
+        loginasLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Login buttons
         # EAST LEGON employees usernames
-        self.cusServ_dep_usn = [
+        cusServ_dep_usn = [
             "welbank",
             "cs",
             "kwameowusu",
         ]
 
         # EAST LEGON employees usernames
-        self.hr_dep_usn = [
+        hr_dep_usn = [
             "welbank",
             "hr",
             "kwadwohanson",
         ]
         # customer Service login Button
-        self.cusServloginButton = QPushButton("Customer Service", clicked=lambda: self.login("cusServDashboard", self.cusServ_dep_usn))  # type: ignore
+        cusServloginButton = QPushButton("Customer Service", clicked=lambda: self.login("cusServDashboard", cusServ_dep_usn))  # type: ignore
         # Human Resource login Button
-        self.HRloginButton = QPushButton("Human Resources", clicked=lambda: self.login("hrDashboard", self.hr_dep_usn))  # type: ignore
+        HRloginButton = QPushButton("Human Resources", clicked=lambda: self.login("hrDashboard", hr_dep_usn))  # type: ignore
 
         # About & Get Help widgets
-        self.aboutButton = QPushButton("About", clicked=lambda: self.about())  # type: ignore
-        self.getHelpButton = QPushButton("Get Help", clicked=lambda: self.help())  # type: ignore
+        aboutButton = QPushButton("About", clicked=lambda: self.about())  # type: ignore
+        getHelpButton = QPushButton("Get Help", clicked=lambda: self.help())  # type: ignore
         ######################################################### END OF WIDGETS CREATION #########################################################
 
         ############################ LAYOUT ############################
@@ -131,24 +128,22 @@ class welcome(QMainWindow):
         # layout.addStretch()
 
         ### ADD WIDGETS TO LAYOUT ###
-        # layout.addWidget(self.welcomeLabel)
-        layout.addWidget(self.logolabel)
+        # layout.addWidget(welcomeLabel)
+        layout.addWidget(logolabel)
         layout.addSpacing(10)
-        layout.addWidget(self.ipaddressLabel)
-        layout.addWidget(self.ipaddressField)
-        layout.addWidget(self.usernameLabel)
+        layout.addWidget(usernameLabel)
         layout.addWidget(self.usernameField)
-        layout.addWidget(self.passwordLabel)
+        layout.addWidget(passwordLabel)
         layout.addWidget(self.passwordField)
-        layout.addWidget(self.loginasLabel)
-        layout.addWidget(self.cusServloginButton)
-        layout.addWidget(self.HRloginButton)
+        layout.addWidget(loginasLabel)
+        layout.addWidget(cusServloginButton)
+        layout.addWidget(HRloginButton)
         layout.addSpacing(10)
 
         # set layout
         nestedlayout = QVBoxLayout()
-        nestedlayout.addWidget(self.aboutButton)
-        nestedlayout.addWidget(self.getHelpButton)
+        nestedlayout.addWidget(aboutButton)
+        nestedlayout.addWidget(getHelpButton)
         # align layout to the bottom right
         nestedlayout.setAlignment(
             Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom
@@ -175,27 +170,34 @@ class welcome(QMainWindow):
     ##################### BUTTON FUNCTIONS #####################
     # LOGIN BUTTON FUNCTION
     def login(self, dashboard: str, dep_usn: list):
+
         # Grab text in the fields
         self.username = self.usernameField.text()
         self.password = self.passwordField.text()  # should probably be encrypted
-        # self.dsn = "192.168.124.110:1521/WELBANK"
-        self.ip = self.ipaddressField.text()
-        self.port = 1521
-        self.service_name = "welbank"
-        self.dsn = cx_Oracle.makedsn(self.ip, self.port, service_name=self.service_name)
+
+        # Read database settings from the config file
+        config = configparser.ConfigParser()
+        config_path = resource_path("config.ini")
+        config.read(config_path)
+        # Connection settings
+        ip = config.get("oracle", "host")
+        port = config.get("oracle", "port")
+        service_name = config.get("oracle", "service_name")
+        # https://stackoverflow.com/a/39984489
+        self.dsn = cx_Oracle.makedsn(ip, port, service_name=service_name)
 
         # set the appropriate dashboard and second department name
         if dashboard == "cusServDashboard":
-            self.dashboard = cusServDashboard()
-            self.otherdep = "Human Resources"
+            dashboard = cusServDashboard()
+            otherdep = "Human Resources"
         elif dashboard == "hrDashboard":
-            self.dashboard = hrDashboard()
-            self.otherdep = "Customer Service"
+            dashboard = hrDashboard()
+            otherdep = "Customer Service"
 
         # initialise connection
-        self.connection = None
+        connection = None
         try:
-            self.connection = cx_Oracle.connect(
+            connection = cx_Oracle.connect(
                 user=self.username, password=self.password, dsn=self.dsn
             )
         except cx_Oracle.Error as err:
@@ -209,20 +211,20 @@ class welcome(QMainWindow):
                 + "Please contact the database administrator",
             )
         else:
-            if self.connection:
+            if connection:
                 if self.username in dep_usn:
                     self.hide()
-                    self.dashboard.show()
+                    dashboard.show()
                     QMessageBox.information(self, "Login", "Login successful")
                 else:
                     QMessageBox.warning(
                         self,
                         "Login Error",
-                        f"You are not authorized to access this section. Please login as a {self.otherdep} employee!",
+                        f"You are not authorized to access this section. Please login as a {otherdep} employee!",
                     )
         finally:
-            if self.connection is not None:
-                self.connection.close()
+            if connection is not None:
+                connection.close()
 
     # About button
     def about(self):

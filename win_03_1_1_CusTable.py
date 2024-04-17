@@ -28,6 +28,7 @@ import cx_Oracle
 import qdarktheme
 import sys
 import os
+import configparser
 
 
 def resource_path(relative_path):
@@ -42,6 +43,7 @@ def resource_path(relative_path):
 
 
 class entityWindow(QMainWindow):
+        
     def __init__(self, entity: str, attributes: list, intAttributes: list):
         """
         Initializes entity window.
@@ -69,6 +71,20 @@ class entityWindow(QMainWindow):
 
         # initialize member of other windows
         # self.cusServDashboard = None
+
+        ################ CONFIGURATION ################
+        # Read database settings from the config file
+        self.config = configparser.ConfigParser()
+        config_path = resource_path("config.ini")
+        self.config.read(config_path)
+        # Connection settings
+        self.username = self.config.get("oracle", "admin_user")
+        self.password = self.config.get("oracle", "password")
+        ip = self.config.get("oracle", "host")
+        port = self.config.get("oracle", "port")
+        service_name = self.config.get("oracle", "service_name")
+        # https://stackoverflow.com/a/39984489
+        self.dsn = cx_Oracle.makedsn(ip, port, service_name=service_name)
 
         # create the UI
         self.initUI()
@@ -481,7 +497,9 @@ class entityWindow(QMainWindow):
         # initialize the connection variable
         connection = None
         try:
-            connection = cx_Oracle.connect("welbank/12345@localhost:1521/WELBANK")
+            connection = cx_Oracle.connect(
+                user=self.username, password=self.password, dsn=self.dsn
+            )
 
         except cx_Oracle.Error as err:
             QMessageBox.critical(
@@ -527,7 +545,9 @@ class entityWindow(QMainWindow):
         # initialize the connection variable
         connection = None
         try:
-            connection = cx_Oracle.connect("welbank/12345@localhost:1521/WELBANK")
+            connection = cx_Oracle.connect(
+                user=self.username, password=self.password, dsn=self.dsn
+            )
 
         except cx_Oracle.Error as err:
             QMessageBox.critical(
@@ -586,7 +606,9 @@ class entityWindow(QMainWindow):
         connection = None
         cursor = None
         try:
-            connection = cx_Oracle.connect("welbank/12345@localhost:1521/WELBANK")
+            connection = cx_Oracle.connect(
+                user=self.username, password=self.password, dsn=self.dsn
+            )
             try:
                 cursor = connection.cursor()
                 cursor.execute(
