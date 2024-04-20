@@ -97,20 +97,44 @@ class welcome(QMainWindow):
         loginasLabel = QLabel("Login as")
         loginasLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Login buttons
-        # EAST LEGON employees usernames
-        cusServ_dep_usn = [
+
+        # Read settings from the config file
+        config = configparser.ConfigParser()
+        config_path = resource_path("config.ini")
+        config.read(config_path)
+        # Connection settings
+        ip = config.get("oracle", "host")
+        port = config.get("oracle", "port")
+        service_name = config.get("oracle", "service_name")
+
+        self.usn = config.get("oracle", "admin_user")
+        self.pwd = config.get("oracle", "password")
+        self.dsn = cx_Oracle.makedsn(ip, port, service_name=service_name) # https://stackoverflow.com/a/39984489
+
+        cs_dept_ids = [int(id.strip()) for id in config.get("database", "cs_dept_ids").split(",")]
+        hr_dept_ids = [int(id.strip()) for id in config.get("database", "hr_dept_ids").split(",")]
+
+        # For Login buttons functions
+        # CUSTOMER SERVICE employees usernames
+        cusServ_dep_usn = self.get_usernames(cs_dept_ids)
+        # add default users
+        cusServ_dep_usn.extend([config.get('oracle', 'admin_user'), config.get('oracle', 'cs_user')])
+        """cusServ_dep_usn = [
             "welbank",
             "cs",
             "kwameowusu",
-        ]
+        ]"""
 
-        # EAST LEGON employees usernames
-        hr_dep_usn = [
+        # HR employees usernames
+        hr_dep_usn = self.get_usernames(hr_dept_ids)
+        # add default users
+        hr_dep_usn.extend([config.get('oracle', 'admin_user'), config.get('oracle', 'hr_user')])
+        """hr_dep_usn = [
             "welbank",
             "hr",
             "kwadwohanson",
-        ]
+        ]"""
+
         # customer Service login Button
         cusServloginButton = QPushButton("Customer Service", clicked=lambda: self.login("cusServDashboard", cusServ_dep_usn))  # type: ignore
         # Human Resource login Button
@@ -167,6 +191,10 @@ class welcome(QMainWindow):
         self.statusBar().showMessage("Ready...")  # type: ignore
         ########################################
 
+        # Other settings
+
+        # print(self.dsn, self.usn, self.pwd, sep="\n")
+
     ##################### BUTTON FUNCTIONS #####################
     # LOGIN BUTTON FUNCTION
     def login(self, dashboard: str, dep_usn: list):
@@ -174,17 +202,6 @@ class welcome(QMainWindow):
         # Grab text in the fields
         self.username = self.usernameField.text()
         self.password = self.passwordField.text()  # should probably be encrypted
-
-        # Read database settings from the config file
-        config = configparser.ConfigParser()
-        config_path = resource_path("config.ini")
-        config.read(config_path)
-        # Connection settings
-        ip = config.get("oracle", "host")
-        port = config.get("oracle", "port")
-        service_name = config.get("oracle", "service_name")
-        # https://stackoverflow.com/a/39984489
-        self.dsn = cx_Oracle.makedsn(ip, port, service_name=service_name)
 
         # set the appropriate dashboard and second department name
         if dashboard == "cusServDashboard":
@@ -220,7 +237,7 @@ class welcome(QMainWindow):
                     QMessageBox.warning(
                         self,
                         "Login Error",
-                        f"You are not authorized to access this section. Please login as a {otherdep} employee!",
+                        f"You are not authorized to access this section. You may login as a {otherdep} employee!",
                     )
         finally:
             if connection is not None:
@@ -241,6 +258,31 @@ class welcome(QMainWindow):
         )
 
     ##################### END OF BUTTON FUNCTIONS #####################
+
+    #_______________________________________________________________
+    # SECONDARY METHODS
+    def get_usernames(self, dep_id: list):
+
+        # Create a connection and cursor
+        connection = cx_Oracle.connect(
+                user=self.usn, password=self.pwd, dsn=self.dsn
+            )
+        cursor = connection.cursor()
+
+        # Execute the SQL query
+        cursor.execute(f"SELECT username FROM employees WHERE dep_id IN ({', '.join(map(str, map(int, dep_id)))})")
+
+        # Fetch the results from the query
+        results = cursor.fetchall()
+
+        # Close the cursor and connection
+        cursor.close()
+        connection.close()
+
+        # Extract the usernames from the results
+        usernames = [result[0] for result in results]
+
+        return usernames
 
     ##################### CENTER WINDOW FUNCTION #####################
     def showEvent(self, event):
