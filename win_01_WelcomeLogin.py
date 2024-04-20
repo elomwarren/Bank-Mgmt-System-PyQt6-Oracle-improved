@@ -97,7 +97,6 @@ class welcome(QMainWindow):
         loginasLabel = QLabel("Login as")
         loginasLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-
         # Read settings from the config file
         config = configparser.ConfigParser()
         config_path = resource_path("config.ini")
@@ -109,16 +108,24 @@ class welcome(QMainWindow):
 
         self.usn = config.get("oracle", "admin_user")
         self.pwd = config.get("oracle", "password")
-        self.dsn = cx_Oracle.makedsn(ip, port, service_name=service_name) # https://stackoverflow.com/a/39984489
+        self.dsn = cx_Oracle.makedsn(
+            ip, port, service_name=service_name
+        )  # https://stackoverflow.com/a/39984489
 
-        cs_dept_ids = [int(id.strip()) for id in config.get("database", "cs_dept_ids").split(",")]
-        hr_dept_ids = [int(id.strip()) for id in config.get("database", "hr_dept_ids").split(",")]
+        cs_dept_ids = [
+            int(id.strip()) for id in config.get("database", "cs_dept_ids").split(",")
+        ]
+        hr_dept_ids = [
+            int(id.strip()) for id in config.get("database", "hr_dept_ids").split(",")
+        ]
 
         # For Login buttons functions
         # CUSTOMER SERVICE employees usernames
         cusServ_dep_usn = self.get_usernames(cs_dept_ids)
         # add default users
-        cusServ_dep_usn.extend([config.get('oracle', 'admin_user'), config.get('oracle', 'cs_user')])
+        cusServ_dep_usn.extend(
+            [config.get("oracle", "admin_user"), config.get("oracle", "cs_user")]
+        )
         """cusServ_dep_usn = [
             "welbank",
             "cs",
@@ -128,7 +135,9 @@ class welcome(QMainWindow):
         # HR employees usernames
         hr_dep_usn = self.get_usernames(hr_dept_ids)
         # add default users
-        hr_dep_usn.extend([config.get('oracle', 'admin_user'), config.get('oracle', 'hr_user')])
+        hr_dep_usn.extend(
+            [config.get("oracle", "admin_user"), config.get("oracle", "hr_user")]
+        )
         """hr_dep_usn = [
             "welbank",
             "hr",
@@ -259,18 +268,18 @@ class welcome(QMainWindow):
 
     ##################### END OF BUTTON FUNCTIONS #####################
 
-    #_______________________________________________________________
+    # _______________________________________________________________
     # SECONDARY METHODS
     def get_usernames(self, dep_id: list):
 
         # Create a connection and cursor
-        connection = cx_Oracle.connect(
-                user=self.usn, password=self.pwd, dsn=self.dsn
-            )
+        connection = cx_Oracle.connect(user=self.usn, password=self.pwd, dsn=self.dsn)
         cursor = connection.cursor()
 
         # Execute the SQL query
-        cursor.execute(f"SELECT username FROM employees WHERE dep_id IN ({', '.join(map(str, map(int, dep_id)))})")
+        cursor.execute(
+            f"SELECT username FROM employees WHERE dep_id IN ({', '.join(map(str, map(int, dep_id)))})"
+        )
 
         # Fetch the results from the query
         results = cursor.fetchall()
