@@ -1,4 +1,4 @@
-# Bank Database Management System
+# Bank Database Management System (IPMC Ghana SEM 1 Database Project)
 ## Internal Management Software for a Bank using Python, PyQt6 and Oracle Database (cx_Oracle driver)
 
 
