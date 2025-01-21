@@ -330,7 +330,7 @@ if __name__ == "__main__":
         welcomewindow.show()
 
         # DARK THEME (https://pypi.org/project/pyqtdarktheme/)
-        qdarktheme.setup_theme("auto")
+        # qdarktheme.setup_theme("auto")
 
         # start the event loop
         sys.exit(app.exec())

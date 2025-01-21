@@ -56,5 +56,5 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
         regwindow = regions()
         regwindow.show()
-        qdarktheme.setup_theme("auto")
+        # qdarktheme.setup_theme("auto")
         sys.exit(app.exec())

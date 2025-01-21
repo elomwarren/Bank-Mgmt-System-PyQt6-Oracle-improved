@@ -219,5 +219,5 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
         accwindow = accounts()
         accwindow.show()
-        qdarktheme.setup_theme("auto")
+        # qdarktheme.setup_theme("auto")
         sys.exit(app.exec())

@@ -75,5 +75,5 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
         jobswindow = jobs()
         jobswindow.show()
-        qdarktheme.setup_theme("auto")
+        # qdarktheme.setup_theme("auto")
         sys.exit(app.exec())
