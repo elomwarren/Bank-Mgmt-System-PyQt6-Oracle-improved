@@ -21,7 +21,7 @@ from PyQt6.QtGui import QGuiApplication, QIcon
 import cx_Oracle
 import sqlite3
 import datetime
-import qdarktheme
+# import qdarktheme
 import sys
 import os
 import configparser

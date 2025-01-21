@@ -10,7 +10,7 @@ from win_03_2_6_regTable import regions
 from win_02_1_CusServDashboard import dashboard
 
 # other modules
-import qdarktheme
+# import qdarktheme
 import sys
 
 

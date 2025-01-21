@@ -18,7 +18,7 @@ from win_02_2_HRDashboard import hrDashboard
 
 # other modules
 import cx_Oracle
-import qdarktheme
+# import qdarktheme
 import sys
 import os
 import configparser

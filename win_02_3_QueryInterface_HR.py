@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication
 from win_02_3_QueryInterface_CS import queryInterface
 
 # other modules
-import qdarktheme
+# import qdarktheme
 import sys
 
 

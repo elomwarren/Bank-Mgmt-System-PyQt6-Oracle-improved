@@ -14,12 +14,12 @@ This is a simulation of a simple Desktop Application for the internal use of a B
 - Employees Management
 
 # Dependencies
-- Python=3.11
+- Python=3.12
 - PyQt6
 - cx_Oracle
 - openpyxl
 - pandas
-- pyqtdarktheme
+- pyqtdarktheme (python<=3.11 only)
 
 # Requirements
 - Windows machine or Red Hat based linux distribution

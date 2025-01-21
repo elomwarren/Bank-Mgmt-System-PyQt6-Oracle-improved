@@ -12,7 +12,7 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from win_03_1_1_CusTable import entityWindow
 
 # other modules
-import qdarktheme
+# import qdarktheme
 import sys
 
 # forgotten to add due date in the database

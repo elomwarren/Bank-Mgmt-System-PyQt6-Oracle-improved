@@ -20,7 +20,7 @@ from win_03_1_5_LoansTable import loans
 from win_03_1_6_LnpayTable import loansPayment
 
 # other modules
-import qdarktheme
+# import qdarktheme
 import sys
 import os
 

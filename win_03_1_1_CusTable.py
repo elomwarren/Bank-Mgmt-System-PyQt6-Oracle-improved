@@ -25,7 +25,7 @@ from PyQt6.QtGui import QGuiApplication, QIcon, QAction, QRegularExpressionValid
 # other modules
 import datetime
 import cx_Oracle
-import qdarktheme
+# import qdarktheme
 import sys
 import os
 import configparser
